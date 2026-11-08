@@ -5,11 +5,13 @@ Price estimates for new wood floors and floor sanding in Denmark, a coverage che
 [Gulvbuddy](https://www.gulvbuddy.dk) installs new wood floors (nyt trægulv) and sands existing floors (gulvafslibning) in Denmark. This remote MCP server lets an AI assistant answer "what will my floor cost?" with the same price engine as [gulvbuddy.dk](https://www.gulvbuddy.dk), instead of guessing.
 
 - **Server URL:** `https://www.gulvbuddy.dk/mcp`
+- **Version:** 2.0.0
 - **Transport:** Streamable HTTP
 - **Authentication:** none
 - **Access:** free and read-only
 - **Documentation:** [gulvbuddy.dk/mcp-info](https://www.gulvbuddy.dk/mcp-info)
 - **Registry:** `dk.gulvbuddy/prisestimat` in the [official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=dk.gulvbuddy)
+- **Claude:** [Gulvbuddy in the Claude Connectors Directory](https://claude.ai/directory/connectors/gulvbuddy)
 
 This repository holds the server's public metadata and setup instructions. The server itself runs on gulvbuddy.dk.
 
@@ -29,9 +31,15 @@ This repository holds the server's public metadata and setup instructions. The s
 | `prisindeks` | Get the open [price index](https://www.gulvbuddy.dk/traegulv/prisindeks) (CC BY 4.0) with edition and source URLs. |
 | `kontakt` | Get phone, email, opening hours and contact links. |
 
-All prices are in DKK including VAT and are estimates, not quotes. The subfloor is never included in the total; it is assessed at a free, no-obligation on-site measurement, after which the customer receives a fixed price. Durations come from measured installation times, never a fixed number of days. Answers are in Danish.
+Every input field has a description, and catalogue choices list their valid values. Every tool declares an output schema and returns `structuredContent` alongside the same data as JSON text. All tools are annotated `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true` and `openWorldHint: false`.
 
-The server never creates an enquiry, a booking or a case, and it stores no personal data. See [how the price is calculated](https://www.gulvbuddy.dk/traegulv/saadan-regner-vi-prisen).
+All prices are in DKK including VAT and are estimates, not quotes. The subfloor is never included in the total; it is assessed when the floor is measured on site, after which the customer receives a fixed price. Durations come from measured installation times. Answers are in Danish.
+
+The server never creates an enquiry, a booking or a case, never asks for a street address, and stores no personal data. See [how the price is calculated](https://www.gulvbuddy.dk/traegulv/saadan-regner-vi-prisen).
+
+## Price card (MCP Apps)
+
+`estimer_traegulv` and `estimer_slibning` link to the UI resource `ui://gulvbuddy/priskort-v1.html` (`text/html;profile=mcp-app`). Hosts that support [MCP Apps](https://github.com/modelcontextprotocol/ext-apps), such as ChatGPT and Claude, show the estimate as a card: the range, the lines it consists of, the subfloor outside the total, the duration and a button to the configurator. The card loads nothing from other hosts, so its CSP is empty. Hosts without MCP Apps get the same data as text.
 
 ## Setup
 
@@ -45,7 +53,7 @@ https://www.gulvbuddy.dk/mcp
 
 ### ChatGPT
 
-Turn on Developer mode, then add an app with the URL above and "No authentication".
+Settings → Apps → Advanced settings → turn on Developer mode. Then create an app with the URL above and "No authentication".
 
 ### Cursor
 
@@ -116,7 +124,21 @@ Cite as: Gulvbuddys prisindeks, september 2026 (CC BY 4.0), https://www.gulvbudd
 
 ## Data handling
 
-The server receives only the fields the tool call contains (area, choices, postcode or address). It does not store them, does not ask for name, email or phone, and sets no cookies. Requests are logged without personal data (tool name, duration, outcome) for operations and abuse protection.
+The server receives only the fields the tool call contains (area, choices, postcode or municipality). It does not store them, does not ask for name, email, phone or street address, and sets no cookies. Calls are counted per tool with duration and outcome, without input and without IP address. The IP address is used briefly in memory for rate limiting (300 calls per 10 minutes) and is not stored with the call.
+
+## Changelog
+
+### 2.0.0 (November 2026)
+
+- Every input field has a description, and catalogue choices list their valid values.
+- Every tool declares an output schema and returns structured content.
+- Estimates are shown as a price card in hosts that support MCP Apps.
+- Estimates include `konfigurator_url`, a direct link to the configurator with the user's own answers.
+- Internal identifiers and timestamps are no longer part of the answers, and all links are absolute.
+
+### 1.0.0 (October 2026)
+
+- First version with eleven read-only tools.
 
 ## License
 

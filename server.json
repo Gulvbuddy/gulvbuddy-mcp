@@ -3,7 +3,7 @@
   "name": "dk.gulvbuddy/prisestimat",
   "title": "Gulvbuddy prisestimat",
   "description": "Prisestimat på nyt trægulv og gulvafslibning i Danmark samt dækningstjek. Gratis, uden login.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "websiteUrl": "https://www.gulvbuddy.dk",
   "remotes": [
     {
