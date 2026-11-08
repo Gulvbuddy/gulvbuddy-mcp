@@ -53,7 +53,7 @@ https://www.gulvbuddy.dk/mcp
 
 ### ChatGPT
 
-Settings → Apps → Advanced settings → turn on Developer mode. Then create an app with the URL above and "No authentication".
+Open [chatgpt.com/plugins](https://chatgpt.com/plugins) → Add → Add custom MCP server. Paste the URL above and choose "No authentication".
 
 ### Cursor
 
